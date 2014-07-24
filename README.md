@@ -48,6 +48,11 @@ the returned object if desired.
 
 Exported by default.
 
+# BUGS
+
+Please report bugs via email to `bug-Test-Deep-DateTime-RFC3339@rt.cpan.org` or
+[via the web on rt.cpan.org](https://rt.cpan.org/Public/Dist/Display.html?Name=Test-Deep-DateTime-RFC3339).
+
 # AUTHOR
 
 Thomas Sibley <trsibley@uw.edu>

@@ -167,6 +167,11 @@ the returned object if desired.
 
 Exported by default.
 
+=head1 BUGS
+
+Please report bugs via email to C<bug-Test-Deep-DateTime-RFC3339@rt.cpan.org> or
+L<via the web on rt.cpan.org|https://rt.cpan.org/Public/Dist/Display.html?Name=Test-Deep-DateTime-RFC3339>.
+
 =head1 AUTHOR
 
 Thomas Sibley E<lt>trsibley@uw.eduE<gt>
