@@ -128,8 +128,8 @@ Test::Deep::DateTime::RFC3339 - Test RFC3339 timestamps are within a certain tol
 
 =head1 DESCRIPTION
 
-Test::Deep::DateTime::RFC3339 provides a single function, L<<
-C<datetime_rfc3339> | /datetime_rfc3339 >>, which is used with L<Test::Deep> to
+Test::Deep::DateTime::RFC3339 provides a single function,
+L<< C<datetime_rfc3339>|/datetime_rfc3339 >>, which is used with L<Test::Deep> to
 check that the B<string> value gotten is an RFC3339-compliant timestamp.  It
 can also check if the timestamp is equal to, or within optional tolerances of,
 an expected timestamp.
