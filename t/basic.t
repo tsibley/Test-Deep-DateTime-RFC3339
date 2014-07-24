@@ -35,21 +35,21 @@ ok !
            "exact, not equal";
 
 cmp_deeply { created => $rfc3339->format_datetime($now->clone->add( seconds => 3 )) },
-           { created => datetime_rfc3339($now, '00:00:05') },
+           { created => datetime_rfc3339($now, '5s') },
            "within tolerance, positive";
 
 cmp_deeply { created => $rfc3339->format_datetime($now->clone->subtract( seconds => 3 )) },
-           { created => datetime_rfc3339($now, '00:00:05') },
+           { created => datetime_rfc3339($now, '5s') },
            "within tolerance, negative";
 
 ok !
 (eq_deeply { created => $rfc3339->format_datetime($now->clone->add( seconds => 3 )) },
-           { created => datetime_rfc3339($now, '00:00:01') }),
+           { created => datetime_rfc3339($now, '1s') }),
            "outside tolerance, positive";
 
 ok !
 (eq_deeply { created => $rfc3339->format_datetime($now->clone->subtract( seconds => 3 )) },
-           { created => datetime_rfc3339($now, '00:00:01') }),
+           { created => datetime_rfc3339($now, '1s') }),
            "outside tolerance, negative";
 
 cmp_deeply { created => $rfc3339->format_datetime($now->clone->add( seconds => 3 )) },
@@ -60,7 +60,7 @@ is datetime_rfc3339($now)->renderExp,
    $rfc3339->format_datetime($now),
    "rendering of expected value is RFC3339";
 
-is datetime_rfc3339($now, '00:00:03')->renderExp,
+is datetime_rfc3339($now, '3s')->renderExp,
    $rfc3339->format_datetime($now) . " +/- 3 seconds",
    "rendering of expected value is RFC3339 +/- human readable tolerance";
 

@@ -1,6 +1,13 @@
 Revision history for Test-Deep-DateTime-RFC3339
 
 {{$NEXT}}
+        [INCOMPATIBLE CHANGE (not that anyone is using this yet...)]
+
+        - Tolerance strings are now of the style 5s, 1h 5m, 2d, etc instead of
+          HH:MM:SS.  This replaces DateTime::Format::Duration with
+          DateTime::Format::Duration::DurationString since the former's implementation is
+          insane and not as useful anyway.  The latter does bring in
+          Any::Moose, but I'm hoping to submit a patching switching to Moo soon.
 
 0.01  2014-07-24 14:37:03 PDT
         - Initial release

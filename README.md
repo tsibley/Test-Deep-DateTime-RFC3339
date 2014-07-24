@@ -9,7 +9,7 @@ Test::Deep::DateTime::RFC3339 - Test RFC3339 timestamps are within a certain tol
 
     my $now    = DateTime->now;
     my $record = create_record(...);
-    cmp_deeply $record, { created => datetime_rfc3339($now, '00:00:05') },
+    cmp_deeply $record, { created => datetime_rfc3339($now, '5s') },
         'Created is within 5 seconds of current time';
 
 # DESCRIPTION
@@ -32,11 +32,12 @@ timestamp.
 Otherwise, this function takes a [DateTime](https://metacpan.org/pod/DateTime) object or an
 [RFC3339 timestamp](https://tools.ietf.org/html/rfc3339) string parseable by
 [DateTime::Format::RFC3339](https://metacpan.org/pod/DateTime::Format::RFC3339) as the required first argument and a
-[DateTime::Duration](https://metacpan.org/pod/DateTime::Duration) object or `HH:MM:SS` string representing a duration as
-an optional second argument.  The second argument is used as a ± tolerance
-centered on the expected datetime.  If a tolerance is provided, the timestamp
-being tested must fall within the closed interval for the test to pass.
-Otherwise, the timestamp being tested must match the expected datetime.
+[DateTime::Duration](https://metacpan.org/pod/DateTime::Duration) object or a [DateTime::Format::Duration::DurationString](https://metacpan.org/pod/DateTime::Format::Duration::DurationString)-style
+string (e.g. `5s`, `1h 5m`, `2d`) representing a duration as an optional
+second argument.  The second argument is used as a ± tolerance centered on the
+expected datetime.  If a tolerance is provided, the timestamp being tested must
+fall within the closed interval for the test to pass.  Otherwise, the timestamp
+being tested must match the expected datetime.
 
 All comparisons and date math are done in UTC, as advised by
 ["How-DateTime-Math-Works" in DateTime](https://metacpan.org/pod/DateTime#How-DateTime-Math-Works).  If this causes problems for you, please

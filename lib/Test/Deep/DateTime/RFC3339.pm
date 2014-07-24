@@ -15,7 +15,7 @@ use Carp 'confess';
 use DateTime;
 use DateTime::Duration;
 use DateTime::Format::RFC3339;
-use DateTime::Format::Duration;
+use DateTime::Format::Duration::DurationString;
 use DateTime::Format::Human::Duration;
 use Safe::Isa '$_isa';
 
@@ -38,13 +38,9 @@ sub init {
         $expected = $parsed;
     }
     unless ($tolerance->$_isa("DateTime::Duration")) {
-        my $pattern = qr/^\d{2}:\d{2}:\d{2}$/;
-        confess "Expected tolerance isn't a DateTime::Duration and doesn't match /$pattern/ (%H:%M:%S): '$tolerance'"
-            unless $tolerance =~ /$pattern/;
-
-        my $parser = DateTime::Format::Duration->new( pattern => "%2H:%2M:%2S" );
-        my $parsed = eval { $parser->parse_duration($tolerance) }
-            or confess "Trouble parsing expected tolerance '$tolerance': $@";
+        my $parser = DateTime::Format::Duration::DurationString->new;
+        my $parsed = eval { $parser->parse($tolerance)->to_duration }
+            or confess "Expected tolerance isn't a DateTime::Duration and can't be parsed: '$tolerance', $@";
         $tolerance = $parsed;
     }
 
@@ -127,7 +123,7 @@ Test::Deep::DateTime::RFC3339 - Test RFC3339 timestamps are within a certain tol
 
     my $now    = DateTime->now;
     my $record = create_record(...);
-    cmp_deeply $record, { created => datetime_rfc3339($now, '00:00:05') },
+    cmp_deeply $record, { created => datetime_rfc3339($now, '5s') },
         'Created is within 5 seconds of current time';
 
 =head1 DESCRIPTION
@@ -151,11 +147,12 @@ timestamp.
 Otherwise, this function takes a L<DateTime> object or an
 L<RFC3339 timestamp|https://tools.ietf.org/html/rfc3339> string parseable by
 L<DateTime::Format::RFC3339> as the required first argument and a
-L<DateTime::Duration> object or C<HH:MM:SS> string representing a duration as
-an optional second argument.  The second argument is used as a ± tolerance
-centered on the expected datetime.  If a tolerance is provided, the timestamp
-being tested must fall within the closed interval for the test to pass.
-Otherwise, the timestamp being tested must match the expected datetime.
+L<DateTime::Duration> object or a L<DateTime::Format::Duration::DurationString>-style
+string (e.g. C<5s>, C<1h 5m>, C<2d>) representing a duration as an optional
+second argument.  The second argument is used as a ± tolerance centered on the
+expected datetime.  If a tolerance is provided, the timestamp being tested must
+fall within the closed interval for the test to pass.  Otherwise, the timestamp
+being tested must match the expected datetime.
 
 All comparisons and date math are done in UTC, as advised by
 L<DateTime/"How-DateTime-Math-Works">.  If this causes problems for you, please
