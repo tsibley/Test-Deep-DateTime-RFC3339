@@ -1,6 +1,8 @@
 Revision history for Test-Deep-DateTime-RFC3339
 
 {{$NEXT}}
+
+0.02  2014-07-24 15:14:22 PDT
         [INCOMPATIBLE CHANGE (not that anyone is using this yet...)]
 
         - Tolerance strings are now of the style 5s, 1h 5m, 2d, etc instead of
