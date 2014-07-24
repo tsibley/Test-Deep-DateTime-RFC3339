@@ -3,7 +3,7 @@ package Test::Deep::DateTime::RFC3339;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Test::Deep::Cmp;    # isa
 
