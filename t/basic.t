@@ -6,6 +6,14 @@ use DateTime::Format::RFC3339;
 
 my $rfc3339 = DateTime::Format::RFC3339->new;
 my $now     = DateTime->now( time_zone => 'UTC' );
+my $check;
+
+sub diag_like($;) {
+    my ($regex, $msg) = (shift, shift);
+    $msg ||= "diagnostics like /$regex/";
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    like $check->diag_message('timestamp'), $regex, $msg;
+}
 
 cmp_deeply { created => '1987-12-18T00:00:00Z' },
            { created => datetime_rfc3339() },
@@ -13,8 +21,9 @@ cmp_deeply { created => '1987-12-18T00:00:00Z' },
 
 ok !
 (eq_deeply { created => '1987-12-18' },
-           { created => datetime_rfc3339() }),
+           { created => $check = datetime_rfc3339() }),
            "parseable only, bad";
+diag_like qr/Can't parse '1987-12-18'/;
 
 cmp_deeply { created => $rfc3339->format_datetime($now) },
            { created => datetime_rfc3339($now) },
@@ -66,11 +75,10 @@ like $@, qr/Expected datetime/i, "error message";
 ok !eval { datetime_rfc3339($now, "bogus") }, "tolerance parse failure";
 like $@, qr/Expected tolerance/i, "error message";
 
-my $check = datetime_rfc3339($now);
 ok !
 (eq_deeply { created => 'bogus' },
-           { created => $check }),
+           { created => $check = datetime_rfc3339($now) }),
            "failure on unparseable value";
-like $check->diag_message('$data->{created}'), qr/Can't parse 'bogus'/, "error message";
+diag_like qr/Can't parse 'bogus'/;
 
 done_testing;
