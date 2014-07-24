@@ -1,0 +1,9 @@
+/Test-Deep-DateTime-RFC3339-*
+/.build
+/Makefile
+/Makefile.old
+/blib
+MYMETA.*
+!META.json
+/.prove
+/pm_to_blib
