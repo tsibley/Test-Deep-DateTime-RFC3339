@@ -25,10 +25,12 @@ sub datetime_rfc3339 {
 
 sub init {
     my $self = shift;
-    my $expected  = shift or confess "Expected datetime required for datetime_rfc3339()";
-    my $tolerance = shift || DateTime::Duration->new; # default to an ->is_zero duration
 
     $self->{parser} = DateTime::Format::RFC3339->new;
+    return unless @_;
+
+    my $expected  = shift or confess "Expected datetime required for datetime_rfc3339() with arguments";
+    my $tolerance = shift || DateTime::Duration->new; # default to an ->is_zero duration
 
     unless ($expected->$_isa("DateTime")) {
         my $parsed = eval { $self->{parser}->parse_datetime($expected) }
@@ -67,13 +69,16 @@ sub descend {
         return 0;
     }
 
-    $got->set_time_zone('UTC');
+    $got->set_time_zone('UTC')
+        if $expected;
 
     # This lets us receive the DateTime object in renderGot
     $self->data->{got_string} = $self->data->{got};
     $self->data->{got} = $got;
 
-    return ($got >= $expected - $tolerance and $got <= $expected + $tolerance);
+    return $expected
+        ? ($got >= $expected - $tolerance and $got <= $expected + $tolerance)
+        : 1;    # we parsed!
 }
 
 # reported at top of diagnostic output on failure
@@ -88,6 +93,8 @@ sub diag_message {
 # used in diagnostic output on failure to render the expected value
 sub renderExp {
     my $self = shift;
+    return "any RFC3339 timestamp" unless $self->{expected};
+
     my $expected = $self->_format( $self->{expected} );
     return $self->{tolerance}->is_zero
         ? $expected
@@ -127,8 +134,9 @@ Test::Deep::DateTime::RFC3339 - Test RFC3339 timestamps are within a certain tol
 
 Test::Deep::DateTime::RFC3339 provides a single function, L<<
 C<datetime_rfc3339> | /datetime_rfc3339 >>, which is used with L<Test::Deep> to
-check that the B<string> value gotten is an RFC3339-compliant timestamp equal
-to, or within the optional tolerances of, the expected timestamp.
+check that the B<string> value gotten is an RFC3339-compliant timestamp.  It
+can also check if the timestamp is equal to, or within optional tolerances of,
+an expected timestamp.
 
 L<RFC3339|https://tools.ietf.org/html/rfc3339> was chosen because it is a sane
 subset of L<ISO8601's kitchen-sink|DateTime::Format::ISO8601/"Supported via parse_datetime">.
@@ -137,20 +145,25 @@ subset of L<ISO8601's kitchen-sink|DateTime::Format::ISO8601/"Supported via pars
 
 =head2 datetime_rfc3339
 
-Takes a L<DateTime> object or an L<RFC3339 timestamp|https://tools.ietf.org/html/rfc3339>
-string parseable by L<DateTime::Format::RFC3339> as the required first argument
-and a L<DateTime::Duration> object or C<HH:MM:SS> string representing a
-duration as an optional second argument.  The second argument is used as a ±
-tolerance centered on the expected datetime.  If a tolerance is provided, the
-timestamp being tested must fall within the closed interval for the test to
-pass.  Otherwise, the timestamp being tested must match the expected datetime.
+Without arguments, the value is only checked to be a parseable RFC3339
+timestamp.
+
+Otherwise, this function takes a L<DateTime> object or an
+L<RFC3339 timestamp|https://tools.ietf.org/html/rfc3339> string parseable by
+L<DateTime::Format::RFC3339> as the required first argument and a
+L<DateTime::Duration> object or C<HH:MM:SS> string representing a duration as
+an optional second argument.  The second argument is used as a ± tolerance
+centered on the expected datetime.  If a tolerance is provided, the timestamp
+being tested must fall within the closed interval for the test to pass.
+Otherwise, the timestamp being tested must match the expected datetime.
 
 All comparisons and date math are done in UTC, as advised by
 L<DateTime/"How-DateTime-Math-Works">.  If this causes problems for you, please
 tell me about it via bug-Test-Deep-DateTime-RFC3339 I<at> rt.cpan.org.
 
 Returns a Test::Deep::DateTime::RFC3339 object, which is a L<Test::Deep::Cmp>,
-but you shouldn't need to care about those internals.
+but you shouldn't need to care about those internals.  You can, however, reuse
+the returned object if desired.
 
 Exported by default.
 

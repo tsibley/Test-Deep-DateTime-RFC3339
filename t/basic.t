@@ -7,6 +7,15 @@ use DateTime::Format::RFC3339;
 my $rfc3339 = DateTime::Format::RFC3339->new;
 my $now     = DateTime->now( time_zone => 'UTC' );
 
+cmp_deeply { created => '1987-12-18T00:00:00Z' },
+           { created => datetime_rfc3339() },
+           "parseable only, good";
+
+ok !
+(eq_deeply { created => '1987-12-18' },
+           { created => datetime_rfc3339() }),
+           "parseable only, bad";
+
 cmp_deeply { created => $rfc3339->format_datetime($now) },
            { created => datetime_rfc3339($now) },
            "exact, equal";
