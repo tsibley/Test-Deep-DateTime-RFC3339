@@ -10,7 +10,7 @@ use ExtUtils::MakeMaker 6.30;
 
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "Blah blah blah",
+  "ABSTRACT" => "Test RFC3339 timestamps are within a certain tolerance",
   "AUTHOR" => "Thomas Sibley <trsibley\@uw.edu>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
@@ -19,7 +19,15 @@ my %WriteMakefileArgs = (
   "EXE_FILES" => [],
   "LICENSE" => "perl",
   "NAME" => "Test::Deep::DateTime::RFC3339",
-  "PREREQ_PM" => {},
+  "PREREQ_PM" => {
+    "DateTime" => 0,
+    "DateTime::Duration" => 0,
+    "DateTime::Format::Duration" => 0,
+    "DateTime::Format::Human::Duration" => 0,
+    "DateTime::Format::RFC3339" => 0,
+    "Safe::Isa" => 0,
+    "Test::Deep" => 0
+  },
   "TEST_REQUIRES" => {
     "Test::More" => "0.96"
   },
@@ -31,6 +39,13 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "DateTime" => 0,
+  "DateTime::Duration" => 0,
+  "DateTime::Format::Duration" => 0,
+  "DateTime::Format::Human::Duration" => 0,
+  "DateTime::Format::RFC3339" => 0,
+  "Safe::Isa" => 0,
+  "Test::Deep" => 0,
   "Test::More" => "0.96"
 );
 
