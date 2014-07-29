@@ -99,7 +99,7 @@ sub renderExp {
 
 sub renderGot {
     my ($self, $got) = @_;
-    return $self->_format($got);
+    return $got->$_isa("DateTime") ? $self->_format($got) : $got;
 }
 
 sub _format {
